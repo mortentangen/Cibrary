@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>Cibrary</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    
+	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	<script type="text/javascript"> google.load("jquery", "1.4.2"); </script>
+	<script src="jqtouch/jqtouch.min.js" type="application/x-javascript" charset="utf-8"></script>
+	<style type="text/css" media="screen">@import "jqtouch/jqtouch.min.css";</style>
+	<style type="text/css" media="screen">@import "themes/apple/theme.min.css";</style>
+    
+    <script type="text/javascript">
+      $.jQTouch({
+        icon: 'jqtouch.png',
+        statusBar: 'black-translucent',
+        preloadImages: [
+            'themes/apple/img/cancel.png',
+            'themes/apple/img/toolbar.png',
+            'themes/apple/img/backButton.png'
+            ]
+      });
+
+     var userAgent = navigator.userAgent.toLowerCase();
+	 var isiPhone = (userAgent.indexOf('iphone') != -1 || userAgent.indexOf('ipod') != -1) ? true : false;
+	 var clickEvent = isiPhone ? 'tap' : 'click';
+	 
+	 
+	 var boker;
+	 function getBoker() {
+		 boker = {"boker" : [
+	               {
+	              	 "id" 		: 1,
+	              	 "tittel" 	: "Harry Potter",
+	              	 "forfatter": "J. K. Rowling",
+	              	 "isbn"		: "123456asfd678"
+	               },
+	               {
+	              	 "id" 		: 2,
+	              	 "tittel" 	: "Decision Points",
+	              	 "forfatter": "George W. Bush",
+	              	 "isbn"		: "123456asfd679"
+	               },
+	               {
+	              	 "id" 		: 3,
+	              	 "tittel" 	: "A Dog´s Tale",
+	              	 "forfatter": "Mark Twain",
+	              	 "isbn"		: "123456asfd680"
+	               }
+	            ]};		 
+	 }
+     
+
+      $(document).ready(function() {
+    	  getBoker();
+    	  populateBokliste();
+    	  registrerClickEventsOnBokliste();
+      });
+      
+      function populateBokliste() {
+			$.each(boker.boker, function(i, bok) {
+	    	  $('#bokListe').append('<li><a id="'+bok.id+'" href="#bok">'+bok.tittel+'</a></li>');
+			});
+
+      }
+      function registrerClickEventsOnBokliste() {
+		$('#bokListe a').bind(clickEvent, function(event) {
+			populerBokSide(event.target.id)
+		});    	  
+      }
+      function populerBokSide(bokId) {
+    	  var bok = getBok(bokId);
+			$('#bok_tittel').html(bok.tittel);
+			$('#bok_forfatter').html(bok.forfatter);			
+			$('#bok_isbn').html(bok.isbn);			
+		}
+      function getBok(bokId) {
+    	  var resultat;
+    	  $.each(boker.boker, function(i, bok) {
+    		  if (bok.id == bokId) {
+    			  resultat = bok;
+    		  }
+			});
+    	  return resultat;
+      }
+    </script>
+
+  </head>
+  <body onload="onBodyLoad()">
+  	<div id="home">
+      <div class="toolbar">
+          <h1>Cibrary</h1>
+          <a href="#info" class="button leftButton flip">Info</a>
+      </div>
+      <ul id="bokListe" class="edgetoedge">
+      </ul>
+	  
+    </div>
+    
+    <div id="info">
+        <div class="toolbar">
+            <h1>About</h1>
+            <a href="#add" class="cancel">Cancel</a>
+        </div>
+        <div class="info">
+            Dette er en applikasjon for å holde styr på alle bøkene hos Ciber
+        </div>
+    </div>
+    
+    <div id="bok">
+      <div class="toolbar">
+          <a class="backButton left cancel" href="#">Go Back</a>
+          <h1>For en stilig app</h1>
+      </div>
+      <div class=info>
+	      <h1 id="bok_tittel"></h1>
+	      <h1 id="bok_forfatter"></h1>
+	      <h1 id="bok_isbn"></h1>
+      </div>
+    </div>
+	</body>
+</html>
