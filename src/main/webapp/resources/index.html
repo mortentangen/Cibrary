@@ -20,57 +20,38 @@
             ]
       });
 
-     var userAgent = navigator.userAgent.toLowerCase();
-	 var isiPhone = (userAgent.indexOf('iphone') != -1 || userAgent.indexOf('ipod') != -1) ? true : false;
-	 var clickEvent = isiPhone ? 'tap' : 'click';
-	 
-	 
+     var userAgent;
+	 var isiPhone;
+	 var clickEvent;
 	 var boker;
-	 function getBoker() {
-		 boker = {"boker" : [
-	               {
-	              	 "id" 		: 1,
-	              	 "tittel" 	: "Harry Potter",
-	              	 "forfatter": "J. K. Rowling",
-	              	 "isbn"		: "123456asfd678"
-	               },
-	               {
-	              	 "id" 		: 2,
-	              	 "tittel" 	: "Decision Points",
-	              	 "forfatter": "George W. Bush",
-	              	 "isbn"		: "123456asfd679"
-	               },
-	               {
-	              	 "id" 		: 3,
-	              	 "tittel" 	: "A Dog´s Tale",
-	              	 "forfatter": "Mark Twain",
-	              	 "isbn"		: "123456asfd680"
-	               },
-	               {
-	              	 "id" 		: 4,
-	              	 "tittel" 	: "Oliver Twist",
-	              	 "forfatter": "Charles Dickens",
-	              	 "isbn"		: "823456asfd681"
-	               }
-	            ]};		 
+	 
+	 $(document).ready(function() {
+		 setupVariables();
+		 getBokerJson();
+     });
+	 
+	 function setupVariables() {
+		 userAgent = navigator.userAgent.toLowerCase();
+		 isiPhone = (userAgent.indexOf('iphone') != -1 || userAgent.indexOf('ipod') != -1) ? true : false;
+		 clickEvent = isiPhone ? 'tap' : 'click';
+	 }
+	 
+	 function getBokerJson() {
+		$.getJSON('../GetBoker.json', function(data) {
+			boker = data;
+			populateBokliste();
+			registrerClickEventsOnBokliste();
+		});
 	 }
      
-
-      $(document).ready(function() {
-    	  getBoker();
-    	  populateBokliste();
-    	  registrerClickEventsOnBokliste();
-      });
-      
       function populateBokliste() {
-			$.each(boker.boker, function(i, bok) {
+			$.each(boker, function(i, bok) {
 	    	  $('#bokListe').append('<li><a id="'+bok.id+'" href="#bok">'+bok.tittel+'</a></li>');
 			});
-
       }
       function registrerClickEventsOnBokliste() {
 		$('#bokListe a').bind(clickEvent, function(event) {
-			populerBokSide(event.target.id)
+			populerBokSide(event.target.id);
 		});    	  
       }
       function populerBokSide(bokId) {
@@ -81,7 +62,7 @@
 		}
       function getBok(bokId) {
     	  var resultat;
-    	  $.each(boker.boker, function(i, bok) {
+    	  $.each(boker, function(i, bok) {
     		  if (bok.id == bokId) {
     			  resultat = bok;
     		  }
